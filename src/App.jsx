@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import GameStatus from './components/GameStatus';
 import InputField from './components/InputField';
-import { GUESSES, RANDOM_WORD_URL } from './helper/constants';
+import LetterButton from './components/LetterButton';
+import { ALPHA, GUESSES, RANDOM_WORD_URL } from './helper/constants';
 import { decrypt, encrypt, eqIgnoreCase, includesIgnoreCase } from './helper/functions';
 
 const App = () => {
@@ -13,15 +14,14 @@ const App = () => {
   const [guess, setGuess] = useState("") // word guess input
   const [clicked, setClicked] = useState(false) // was the guess button clicked
   const [guessedLetters, setGuessedLetters] = useState("") // keep track of guesses
-  const [letter, setLetter] = useState("") //letter guess input
   const [guessNum, setGuessNum] = useState(GUESSES)
 
   const [win, setWin] = useState(false)
   const [lose, setLose] = useState(false)
 
   // fetch word
-  const fetchWord = (e) =>{
-    axios.get(RANDOM_WORD_URL).then(({data}) =>{
+  const fetchWord = () => {
+    axios.get(RANDOM_WORD_URL).then(({ data }) => {
       const generatedWord = data[0]
       setWord(generatedWord)
       setDisplay(encrypt(generatedWord))
@@ -52,26 +52,11 @@ const App = () => {
 
   // mechanics
 
-  // check letter guess
-  const checkLetter = (e) => {
-    e.preventDefault()
-    setClicked(false)
-    if (!includesIgnoreCase(word, letter))
-    {
-      if (includesIgnoreCase(guessedLetters, letter)) return
-      
-      setGuessNum(guessNum - 1)
-      setGuessedLetters(`${guessedLetters} ${letter} `)
-    }
-    else
-      setDisplay(decrypt(word, display, letter))
-  }
-
   const checkGuess = (e) => {
     e.preventDefault()
     setClicked(true)
   }
-  
+
   const reset = (e) => {
     e.preventDefault()
     setGuessedLetters("")
@@ -89,14 +74,6 @@ const App = () => {
       <p>Guesses left: {guessNum}</p>
 
       <InputField
-        label="Guess a letter"
-        disabled={win || lose}
-        submitText="Guess letter"
-        onChange={(e) => setLetter(e.target.value)}
-        onReset={reset}
-        onSubmit={checkLetter} />
-
-      <InputField
         label="Guess a word"
         disabled={win || lose}
         inputSize={(word.length + 1) * 1000}
@@ -104,8 +81,29 @@ const App = () => {
         onChange={(e) => setGuess(e.target.value)}
         onReset={reset}
         onSubmit={checkGuess} />
-        <br/>
-        <h2>[{guessedLetters}]</h2>
+      <br />
+      {ALPHA.map(char =>
+      (
+        <LetterButton
+          disabled={guessedLetters.includes(char) || display.includes(char)}
+          letter={char}
+          key={char}
+          onClick={(e) => {
+            e.preventDefault()
+            setClicked(false)
+            if (!includesIgnoreCase(word, char)) {
+              if (includesIgnoreCase(guessedLetters, char)) return
+
+              setGuessNum(guessNum - 1)
+              setGuessedLetters(`${guessedLetters} ${char} `)
+            }
+            else
+              setDisplay(decrypt(word, display, char))
+          }} />
+
+      ))}
+      <h2>{guessedLetters}</h2>
+
     </Container>
   );
 }

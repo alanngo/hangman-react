@@ -23,7 +23,7 @@ const InputField = (
             onChange={onChange}
             ref={ref} />
         <br />
-        <Button variant="contained" disabled={disabled} onClick={onSubmit}>{submitText}</Button>
+        <Button variant="contained" disabled={disabled} onClick={onSubmit} color="success">{submitText}</Button>
         <Button variant="contained" onClick={onReset} color="error">Reset</Button>
         <br />
     </>
