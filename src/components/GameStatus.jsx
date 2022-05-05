@@ -1,14 +1,15 @@
 import { Alert } from "@mui/material"
+import { GREEN, RED } from "../helper/constants"
 import RenderIf from "./RenderIf"
 
 const GameStatus = ({lose, win, word}) => 
 (
     <>
         <RenderIf condition={lose}>
-            <Alert severity="error">GAME OVER! The word was: {word} 💀</Alert>
+            <Alert severity={RED}>GAME OVER! The word was: {word} 💀</Alert>
         </RenderIf>
         <RenderIf condition={win}>
-            <Alert severity="success">Congratulations! 🎉</Alert>
+            <Alert severity={GREEN}>Congratulations! 🎉</Alert>
         </RenderIf>
     </>
 )

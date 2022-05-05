@@ -1,4 +1,5 @@
 import { Button, TextField } from "@mui/material"
+import { RESET, BTN_VARIANT } from "../helper/constants"
 
 const InputField = (
     {
@@ -16,15 +17,14 @@ const InputField = (
     <>
         <br />
         <TextField
-            id="outlined-basic"
             label={label}
             variant="standard"
             inputProps={{ maxLength: inputSize || 1 }}
             onChange={onChange}
             ref={ref} />
         <br />
-        <Button variant="contained" disabled={disabled} onClick={onSubmit} color="success">{submitText}</Button>
-        <Button variant="contained" onClick={onReset} color="error">Reset</Button>
+        <Button variant={BTN_VARIANT} disabled={disabled} onClick={onSubmit} color="success">{submitText}</Button>
+        <Button variant={BTN_VARIANT} onClick={onReset} color="error">{RESET}</Button>
         <br />
     </>
 )

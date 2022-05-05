@@ -5,15 +5,15 @@ import './App.css';
 import GameStatus from './components/GameStatus';
 import InputField from './components/InputField';
 import LetterButton from './components/LetterButton';
-import { ALPHA, GUESSES, RANDOM_WORD_URL } from './helper/constants';
+import { ALPHA, BLANK, BLANK_SPACE, GUESSES, GUESS_WORD, RANDOM_WORD_URL } from './helper/constants';
 import { decrypt, encrypt, eqIgnoreCase, includesIgnoreCase } from './helper/functions';
 
 const App = () => {
-  const [word, setWord] = useState(" ") // word to guess
-  const [display, setDisplay] = useState("") // word to display
-  const [guess, setGuess] = useState("") // word guess input
+  const [word, setWord] = useState(BLANK_SPACE) // word to guess
+  const [display, setDisplay] = useState(BLANK) // word to display
+  const [guess, setGuess] = useState(BLANK) // word guess input
   const [clicked, setClicked] = useState(false) // was the guess button clicked
-  const [guessedLetters, setGuessedLetters] = useState("") // keep track of guesses
+  const [guessedLetters, setGuessedLetters] = useState(BLANK) // keep track of guesses
   const [guessNum, setGuessNum] = useState(GUESSES)
 
   const [win, setWin] = useState(false)
@@ -59,7 +59,7 @@ const App = () => {
 
   const reset = (e) => {
     e.preventDefault()
-    setGuessedLetters("")
+    setGuessedLetters(BLANK)
     setLose(false)
     setWin(false)
     setClicked(false)
@@ -74,10 +74,10 @@ const App = () => {
       <p>Guesses left: {guessNum}</p>
 
       <InputField
-        label="Guess a word"
+        label={GUESS_WORD}
         disabled={win || lose}
         inputSize={(word.length + 1) * 1000}
-        submitText="Guess word"
+        submitText={GUESS_WORD}
         onChange={(e) => setGuess(e.target.value)}
         onReset={reset}
         onSubmit={checkGuess} />
@@ -85,7 +85,12 @@ const App = () => {
       {ALPHA.map(char =>
       (
         <LetterButton
-          disabled={guessedLetters.includes(char) || display.includes(char)}
+          disabled={
+            includesIgnoreCase(guessedLetters, char) ||
+            includesIgnoreCase(display, char) ||
+            win ||
+            lose
+          }
           letter={char}
           key={char}
           onClick={(e) => {
@@ -102,6 +107,7 @@ const App = () => {
           }} />
 
       ))}
+
       <h2>{guessedLetters}</h2>
 
     </Container>
