@@ -1,4 +1,4 @@
-import { BLANK, HIDDEN_CHAR } from "./constants"
+import { BLANK, HIDDEN_CHAR } from "../constants"
 export const eqIgnoreCase = (arg0 = BLANK, arg1 = BLANK) => (arg0.toLowerCase() === arg1.toLowerCase())
 export const includesIgnoreCase = (word = BLANK, letter = BLANK) => (word.toLowerCase().includes(letter.toLowerCase()))
 export const encrypt = (word = BLANK) => (word.replace(/[a-z]/g, HIDDEN_CHAR))
